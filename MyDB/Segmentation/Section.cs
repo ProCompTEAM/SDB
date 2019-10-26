@@ -51,8 +51,18 @@ namespace MyDB.Segmentation
 			Position pos = null;
 			
 			for(int offsetX = 0; offsetX < Size; offsetX++)
+			{
 				for(int offsetY = 0; offsetY < Size; offsetY++)
-					if(Content[offsetX, offsetY] == null) pos = new Position(offsetX, offsetY);
+				{
+					if(Content[offsetX, offsetY] == null)
+					{
+							pos = new Position(offsetX, offsetY);
+							goto enf;
+					}
+				}
+			}
+			
+			enf:
 			
 			if(pos == null) throw new Exception("Секция переполнена!");
 			
@@ -204,6 +214,16 @@ namespace MyDB.Segmentation
 			return list.ToArray();
 		}
 		
+		public ObjectDB[] AsList(Position[] positions)
+		{
+			List<ObjectDB> list = new List<ObjectDB>();
+			
+			foreach(Position pos in positions)
+				list.Add(Get(pos));
+			
+			return list.ToArray();
+		}
+		
 		public int Length
 		{
 			get 
@@ -215,6 +235,20 @@ namespace MyDB.Segmentation
 						if(Content[offsetX, offsetY] != null) l++;	
 				
 				return l;
+			}
+		}
+		
+		public bool Full
+		{
+			get
+			{
+				bool full = true;
+				
+				for(int offsetX = 0; offsetX < Size; offsetX++)
+					for(int offsetY = 0; offsetY < Size; offsetY++)
+						if(Content[offsetX, offsetY] != null) full = false;
+				
+				return full;
 			}
 		}
 

@@ -5,9 +5,7 @@ using MyDB.Utils;
 namespace MyDB.Segmentation.Obj
 {
 	public class DataString : ObjectDB
-	{
-		private int Length;
-		
+	{	
 		public DataString()
 		{
 			Identifier = 0x01;
@@ -22,12 +20,6 @@ namespace MyDB.Segmentation.Obj
 			string data = (string) args[0];
 			
 			byte[] content = Database.CurrentDatabase.TextEncoding.GetBytes(data);
-			
-			int newLength = content.Length;
-			
-			if(newLength > Database.CurrentDatabase.MaxBlockDeep) CreateDeepException();
-			
-			Length = newLength;
 			
 			base.Content = content;
 		}
@@ -49,6 +41,12 @@ namespace MyDB.Segmentation.Obj
 		public override string Execute(string[] args)
 		{
 			return "";
+		}
+		
+		public void AddLine(string line)
+		{
+			if(Content == null || Content.Length < 1) Insert(line);
+			else Insert(ContentString + Environment.NewLine + line);
 		}
 	}
 }

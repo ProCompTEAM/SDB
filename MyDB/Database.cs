@@ -26,14 +26,6 @@ namespace MyDB
 		
 		internal string RootDirectory = "";
 		
-		public const int BLOCK_DEEP_KB16 = 16000;
-		public const int BLOCK_DEEP_KB32 = 32000;
-		public const int BLOCK_DEEP_KB64 = 64000;
-		public const int BLOCK_DEEP_KB128 = 128000;
-		public const int BLOCK_DEEP_MB = 1024000;
-		
-		public readonly int MaxBlockDeep;
-		
 		public const string DB_SECTION_FFORMAT = "{filename}.dbv1s";
 		
 		public enum StorageMode
@@ -45,7 +37,7 @@ namespace MyDB
 		
 		public readonly StorageMode Mode;
 			
-		public Database(string name, string resources = "C://", int maxDeepBlock = BLOCK_DEEP_KB64, 
+		public Database(string name, string resources = "C://", 
 		               StorageMode mode = StorageMode.Safe)
 		{
 			CurrentDatabase = this;
@@ -53,8 +45,6 @@ namespace MyDB
 			Name = name;
 			
 			Resources = resources;
-			
-			MaxBlockDeep = maxDeepBlock;
 			
 			ObjectDB.InitializeDefaultTypes();
 			
@@ -76,10 +66,10 @@ namespace MyDB
 			}
 		}
 		
-		public static Database FromResources(string name, string resources = "C://", int maxDeepBlock = BLOCK_DEEP_KB64, 
+		public static Database FromResources(string name, string resources = "C://", 
 		               StorageMode mode = StorageMode.Safe)
 		{
-			Database db = new Database(name, resources, maxDeepBlock, mode);
+			Database db = new Database(name, resources, mode);
 			
 			db.LoadIndex();
 			
@@ -170,6 +160,24 @@ namespace MyDB
 		public override string ToString()
 		{
 			return Name;
+		}
+		
+		public ObjectDB Select(Address address)
+		{
+			if(CurrentSection.Address != address.XX)
+				throw new Exception("Обращение к заявленной секции невозможно!");
+			
+			return CurrentSection.Get(address.AsPosition());
+		}
+		
+		public ObjectDB Select(Position position)
+		{
+			return Select(position.AsAddress(CurrentSection.Address));
+		}
+		
+		public ObjectDB Select(byte ox, byte oy)
+		{
+			return Select(new Address(CurrentSection.Address, ox, oy));
 		}
 
 	}

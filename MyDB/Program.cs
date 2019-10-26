@@ -185,11 +185,8 @@ namespace MyDB
  			
  			Group group = (Group) db.CurrentSection.Get(grp);
  			Console.WriteLine(group.Label);
- 			foreach(Position pos in group.ContentLinks)
- 			{
- 				DataString str = (DataString) db.CurrentSection.Get(pos);
+ 			foreach(DataString str in db.CurrentSection.AsList(group.ContentLinks))
  				Console.WriteLine(str.Label + " > " + str.ContentString);
- 			}
 		}
 		
 		//===var 5=== Resources ===
@@ -216,7 +213,7 @@ namespace MyDB
  			SectionsInfo si = new SectionsInfo(db);
  			db.LoadSection("-= <= RESOURCES => =-", si.GetIdsByLabel("-= <= RESOURCES => =-")[0]);
  			
- 			Resource resource = (Resource) db.CurrentSection.Get(new Position(255, 255));
+ 			Resource resource = (Resource) db.CurrentSection.Get(new Position(0, 0));
  			File.WriteAllBytes("D://MyDatabase/resultImage.png", resource.ContentData);
 		}
 		
@@ -252,13 +249,44 @@ namespace MyDB
  			SectionsInfo si = new SectionsInfo(db);
  			db.LoadSection("Компоненты", si.GetIdsByLabel("Компоненты")[0]);
  			
- 			Component com1 = (Component) db.CurrentSection.Get(new Position(255, 255));
- 			Component com2 = (Component) db.CurrentSection.Get(new Position(255, 254));
- 			Component com3 = (Component) db.CurrentSection.Get(new Position(255, 253));
- 			Component com4 = (Component) db.CurrentSection.Get(new Position(255, 252));
- 			Component com5 = (Component) db.CurrentSection.Get(new Position(255, 251));
+ 			Component com1 = (Component) db.CurrentSection.Get(new Position(0, 0));
+ 			Component com2 = (Component) db.CurrentSection.Get(new Position(0, 1));
+ 			Component com3 = (Component) db.CurrentSection.Get(new Position(0, 2));
+ 			Component com4 = (Component) db.CurrentSection.Get(new Position(0, 3));
+ 			Component com5 = (Component) db.CurrentSection.Get(new Position(0, 4));
  			
  			Console.WriteLine("{0}, {1}, {2}, {3}, {4}", com1.Run(), com2.Run(), com3.Run(), com4.Run(), com5.Run());
+		}
+		
+		//===var 7=== DataText : Test Lines Stack ===
+		static void Test13()
+		{
+			Database db = new Database("MyDatabase", "D://");
+			byte adr = db.MakeSection("Тексты");
+			
+			DataString s = new DataString();
+			s.Label = "Пожилая чешуя";
+			
+			for(int i = 1; i <= 256; i++)
+			{
+				s.AddLine("Строка №" + i);
+			}
+			
+			db.CurrentSection.Add(s);
+			
+			Console.WriteLine("saving...");
+			
+			db.CurrentSection.Update();
+			
+			Console.WriteLine("! saved.");
+		}
+		
+		static void Test14()
+		{
+			Database db = Database.FromResources("MyDatabase", "D://");
+ 			SectionsInfo si = new SectionsInfo(db);
+ 			db.LoadSection("Тексты", si.GetIdsByLabel("Тексты")[0]);
+ 			Console.WriteLine(((DataString) db.Select(0,0)).ContentString);
 		}
 	}
 }

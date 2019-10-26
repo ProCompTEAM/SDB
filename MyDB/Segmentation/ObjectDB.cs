@@ -31,11 +31,6 @@ namespace MyDB.Segmentation
 		
 		public abstract string Execute(string[] args);
 		
-		protected void CreateDeepException()
-		{
-			throw new Exception("Размер внесенных данных привышает установленный лимит!");
-		}
-		
 		public static void RegisterObject(ObjectDB obj)
 		{
 			Objects.Add(obj);
