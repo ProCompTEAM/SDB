@@ -42,5 +42,13 @@ namespace MyDB.Utils
 		{
 			return new Position(YY, ZZ);
 		}
+		
+		public int Average
+		{
+			get 
+			{
+				return (XX + YY + ZZ) / 3;
+			}
+		}
 	}
 }

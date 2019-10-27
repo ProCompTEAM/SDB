@@ -40,7 +40,7 @@ namespace MyDB
 			
 			for(int i = 0; i < 256; i++)
 			{
-				string sign = Sign.CreateSectionSignature(label, (byte) i);
+				string sign = Sign.CreateSectionSignature(Locale.ToUpper(label), (byte) i);
 				
 				if(Sections.IndexOf(sign) != -1) result.Add((byte) i);
 			}

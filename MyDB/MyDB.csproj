@@ -64,6 +64,8 @@
     <Compile Include="Segmentation\Obj\Resource.cs" />
     <Compile Include="Segmentation\Obj\Structure.cs" />
     <Compile Include="Segmentation\Section.cs" />
+    <Compile Include="Tests\IOTests.cs" />
+    <Compile Include="Tests\LoadTests.cs" />
     <Compile Include="Utils\Address.cs" />
     <Compile Include="Utils\Locale.cs" />
     <Compile Include="Utils\Position.cs" />
@@ -73,6 +75,7 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Tests" />
     <Folder Include="Segmentation\Data" />
     <Folder Include="Segmentation\Meta" />
     <Folder Include="Segmentation\Obj" />

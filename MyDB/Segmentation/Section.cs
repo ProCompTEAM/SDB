@@ -16,7 +16,7 @@ namespace MyDB.Segmentation
 		
 		protected MetaInfo Info = new MetaInfo();
 		
-		public readonly DataBuilder Builder;
+		internal DataBuilder Builder;
 		
 		readonly ObjectDB[,] Content = new ObjectDB[Size, Size];
 		
@@ -44,6 +44,11 @@ namespace MyDB.Segmentation
 			Content[pos.X, pos.Y] = obj;
 			
 			return new Address(Info.Address, pos.X, pos.Y);
+		}
+		
+		public Address Set(ObjectDB obj, int x, int y)
+		{
+			return Set(obj, new Position(x, y));
 		}
 		
 		public Address Add(ObjectDB obj)
@@ -190,12 +195,19 @@ namespace MyDB.Segmentation
                 }
             }
 			
+			section.Builder = builder;
+			
 			return section;
 		}
 		
 		public ObjectDB Get(Position pos)
 		{
 			return Content[pos.X, pos.Y];
+		}
+		
+		public ObjectDB Get(int x, int y)
+		{
+			return Content[x, y];
 		}
 		
 		public override string ToString()
@@ -246,11 +258,28 @@ namespace MyDB.Segmentation
 				
 				for(int offsetX = 0; offsetX < Size; offsetX++)
 					for(int offsetY = 0; offsetY < Size; offsetY++)
-						if(Content[offsetX, offsetY] != null) full = false;
+						if(Content[offsetX, offsetY] == null) full = false;
 				
 				return full;
 			}
 		}
-
+		
+		public ObjectDB[] Range(Position pos1, Position pos2)
+		{
+			if(pos1.Average > pos2.Average) throw new Exception("Позиции за пределами допустимых значений");
+			
+			List<ObjectDB> list = new List<ObjectDB>();
+			
+			for(int offsetX = pos1.X; offsetX < pos2.X; offsetX++)
+				for(int offsetY = pos1.Y; offsetY < pos2.Y; offsetY++)
+					if(Content[offsetX, offsetY] != null) list.Add(Content[offsetX, offsetY]);
+			
+			return list.ToArray();
+		}
+		
+		public ObjectDB[] Range(int xFrom, int yFrom, int xTo, int yTo)
+		{
+			return Range(new Position(xFrom, yFrom), new Position(xTo, yTo));
+		}
 	}
 }

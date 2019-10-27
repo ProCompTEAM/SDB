@@ -124,6 +124,8 @@ namespace MyDB
 		
 		public Section LoadSection(string label, byte penId)
 		{
+			label = Locale.ToUpper(label);
+			
 			string source = Database.CurrentDatabase.RootDirectory + 
 				Database.DB_SECTION_FFORMAT.Replace("{filename}", Sign.CreateSectionSignature(label, penId));
 			
