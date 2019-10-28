@@ -4,7 +4,9 @@ using System.IO;
 using System.Collections.Generic;
 
 using MyDB.Segmentation;
+using MyDB.Segmentation.Data;
 using MyDB.Utils;
+using MyDB.Logger;
 
 namespace MyDB
 {
@@ -28,6 +30,8 @@ namespace MyDB
 		
 		public const string DB_SECTION_FFORMAT = "{filename}.dbv1s";
 		
+		public ContentLogger Logger;
+		
 		public enum StorageMode
 		{
 			Memory,
@@ -38,8 +42,10 @@ namespace MyDB
 		public readonly StorageMode Mode;
 			
 		public Database(string name, string resources = "C://", 
-		               StorageMode mode = StorageMode.Safe)
+		                StorageMode mode = StorageMode.Safe, ContentLogger logger = null)
 		{
+			Logger = logger;
+			
 			CurrentDatabase = this;
 			
 			Name = name;
@@ -53,6 +59,9 @@ namespace MyDB
 			Mode = mode;
 			
 			Initialize();
+			
+			if(Logger != null)
+				Logger.Push(ContentLogger.EVENT_STARTPOINT, "Registered DB '" + Name + "' in '" + RootDirectory + "'");
 		}
 		
 		private void Initialize()
@@ -74,6 +83,13 @@ namespace MyDB
 			db.LoadIndex();
 			
 			return db;
+		}
+		
+		public void EnableDefaultLogger(string DefaultBuilderPassword = "default")
+		{
+			XorBuilder builder = new XorBuilder();
+			builder.Key = Database.CurrentDatabase.TextEncoding.GetBytes(DefaultBuilderPassword);
+			Logger = new ContentLogger(RootDirectory + "default.logdb", builder);
 		}
 		
 		int PenId = 0x00;

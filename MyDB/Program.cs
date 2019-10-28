@@ -11,6 +11,7 @@ namespace MyDB
 	{
 		public static void Main(string[] args)
 		{
+			Tests.LoadTests.Test2();
 			Console.ReadKey();
 		}
 	}

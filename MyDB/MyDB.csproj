@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database.cs" />
+    <Compile Include="Logger\ContentLogger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SectionsInfo.cs" />
@@ -75,6 +76,7 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Logger" />
     <Folder Include="Tests" />
     <Folder Include="Segmentation\Data" />
     <Folder Include="Segmentation\Meta" />

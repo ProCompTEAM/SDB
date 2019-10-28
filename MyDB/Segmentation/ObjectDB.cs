@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using MyDB.Utils;
 using MyDB.Segmentation.Obj;
+using MyDB.Logger;
 
 namespace MyDB.Segmentation
 {
@@ -25,9 +26,22 @@ namespace MyDB.Segmentation
 			get { return Identifier; }
 		}
 		
-		public abstract void Insert(params object[] data);
+		public ContentLogger Logger
+		{
+			get { return Database.CurrentDatabase.Logger; }
+		}
 		
-		public abstract void Update(params object[] data);
+		public virtual void Insert(params object[] data)
+		{
+			if(Logger != null)
+				Logger.Push(ContentLogger.EVENT_INSERT, "");
+		}
+		
+		public virtual void Update(params object[] data)
+		{
+			if(Logger != null)
+				Logger.Push(ContentLogger.EVENT_UPDATE, "");
+		}
 		
 		public abstract string Execute(string[] args);
 		

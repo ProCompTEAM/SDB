@@ -12,6 +12,7 @@ namespace MyDB.Tests
 		public static void Test1()
 		{
 			Database db = new Database(NameDB, Directory);
+			db.EnableDefaultLogger();
 			
 			db.MakeSection("Test1");
 			
@@ -30,6 +31,7 @@ namespace MyDB.Tests
 		public static void Test2()
 		{
 			Database db = Database.FromResources(NameDB, Directory);
+			db.EnableDefaultLogger();
 			
 			db.LoadSection("Test1", new SectionsInfo(db).GetIdsByLabel("Test1")[0]);
 

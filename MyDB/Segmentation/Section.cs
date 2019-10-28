@@ -6,6 +6,7 @@ using System.IO;
 using MyDB.Utils;
 using MyDB.Segmentation.Data;
 using MyDB.Segmentation.Meta;
+using MyDB.Logger;
 
 namespace MyDB.Segmentation
 {
@@ -35,6 +36,15 @@ namespace MyDB.Segmentation
 				Builder = new XorBuilder();
 				((XorBuilder) Builder).Key = Database.CurrentDatabase.TextEncoding.GetBytes(DefaultBuilderPassword);
 			}
+			
+			if(Logger != null)
+				Logger.Push(ContentLogger.EVENT_LOAD_S, "Section '" + Label + " loaded on " + Address);
+		}
+		
+		~Section()
+		{
+			if(Logger != null)
+				Logger.Push(ContentLogger.EVENT_UNLOAD_S, "Section '" + Label + " unloaded on " + Address);
 		}
 		
 		public Address Set(ObjectDB obj, Position pos)
@@ -42,6 +52,9 @@ namespace MyDB.Segmentation
 			if(Content[pos.X, pos.Y] != null) Remove(pos);
 			
 			Content[pos.X, pos.Y] = obj;
+			
+			if(Logger != null)
+				Logger.Push(ContentLogger.EVENT_SETUP, pos.AsAddress(Address).ToString());
 			
 			return new Address(Info.Address, pos.X, pos.Y);
 		}
@@ -143,6 +156,9 @@ namespace MyDB.Segmentation
 					writer.Write(currdat);
 				}
 			}
+			
+			if(Logger != null)
+				Logger.Push(ContentLogger.EVENT_SAVED_S, "Section '" + Label + " saved on " + Address);
 		}
 		
 		public static Section ReadSection(string sourceFile, DataBuilder builder = null, string DefaultBuilderPassword = "default")
@@ -234,6 +250,11 @@ namespace MyDB.Segmentation
 				list.Add(Get(pos));
 			
 			return list.ToArray();
+		}
+		
+		public ContentLogger Logger
+		{
+			get { return Database.CurrentDatabase.Logger; }
 		}
 		
 		public int Length
